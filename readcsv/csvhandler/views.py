@@ -8,9 +8,10 @@ from .serializers import ItemSerializer
 class CSVItemView(APIView):
     def get(self, request, *args, **kwargs):
         try:
-            with open('data1.csv', 'r') as file:
+            with open('C:/Users/USER/OneDrive/Python3/django/Octopus Task/Code/data1.csv', 'r') as file:
                 reader = csv.DictReader(file)
                 items = [item for item in reader]
+                print(items)
 
             serializer = ItemSerializer(data=items, many=True)
             if serializer.is_valid():
