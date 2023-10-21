@@ -11,12 +11,13 @@ class CSVItemView(APIView):
             with open('C:/Users/USER/OneDrive/Python3/django/Octopus Task/Code/data1.csv', 'r') as file:
                 reader = csv.DictReader(file)
                 items = [item for item in reader]
-                print(items)
 
-            serializer = ItemSerializer(data=items, many=True)
-            if serializer.is_valid():
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serialized_items = []
+            for item_data in items:
+                item = Item(**item_data)
+                serialized_items.append(ItemSerializer(item).data)
+
+            return Response(serialized_items, status=status.HTTP_200_OK)
+
         except FileNotFoundError:
             return Response({'message': 'CSV file not found.'}, status=status.HTTP_404_NOT_FOUND)
