@@ -8,16 +8,15 @@ from .serializers import ItemSerializer
 class CSVItemView(APIView):
     def get(self, request, *args, **kwargs):
         try:
-            with open('C:/Users/USER/OneDrive/Python3/django/Octopus Task/Code/data1.csv', 'r') as file:
+            with open('C:/Users/USER/OneDrive/Python3/django/Octopus Task/Code/data2.csv', 'r') as file:
                 reader = csv.DictReader(file)
-                items = [item for item in reader]
+                # for row in reader:
+                #     Item.objects.create(id=row['id'], age=row['age'])
 
-            serialized_items = []
-            for item_data in items:
-                item = Item(**item_data)
-                serialized_items.append(ItemSerializer(item).data)
 
-            return Response(serialized_items, status=status.HTTP_200_OK)
+            data = Item.objects.all()
+            serializer = ItemSerializer(data, many=True)
+            return Response(serializer.data)
 
         except FileNotFoundError:
             return Response({'message': 'CSV file not found.'}, status=status.HTTP_404_NOT_FOUND)
